@@ -17,6 +17,8 @@ private:
 	int board[9][9];
 
 	// add extra helper functions here
+	bool checkBoard();
+	bool advance(int row, int col);
 };
 
 #endif

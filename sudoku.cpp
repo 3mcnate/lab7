@@ -3,7 +3,8 @@
 
 using namespace std;
 
-Sudoku::Sudoku(int puzzle[9][9]) {
+Sudoku::Sudoku(int puzzle[9][9]) 
+{
   for(int i = 0; i < 9; i++) {
     for(int j = 0; j < 9; j++) {
       board[i][j] = puzzle[i][j];
@@ -11,10 +12,13 @@ Sudoku::Sudoku(int puzzle[9][9]) {
   }
 }
 
-Sudoku::~Sudoku() {
+Sudoku::~Sudoku() 
+{
+
 }
 
-void Sudoku::verify() {
+void Sudoku::verify() 
+{
   for(int i = 0; i < 9; i++) {
     for(int j = 0; j < 9; j++) {
       if(!isValid(i, j)) {
@@ -26,7 +30,8 @@ void Sudoku::verify() {
   cout << "VALID PUZZLE" << endl;
 }
 
-void Sudoku::print() {
+void Sudoku::print()
+{
   for (int row=0; row<9; row++) {
       if (row % 3== 0) {
       std::cout << "-------------------------------" << std::endl;
@@ -50,9 +55,8 @@ void Sudoku::print() {
   std::cout << "-------------------------------" << std::endl;
 }
 
-bool Sudoku::isValid(int row, int col) {
-
-
+bool Sudoku::isValid(int row, int col) 
+{
   int value = board[row][col];
 
   for (int i=0; i<9; i++) {
@@ -96,11 +100,50 @@ bool Sudoku::isValid(int row, int col) {
   return true;
 }
 
-void Sudoku::solve(){
+bool Sudoku::checkBoard()
+{
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (board[i][j] == 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+void Sudoku::solve() {
   solveHelper(0, 0);
 }
 
 
-bool Sudoku::solveHelper(int row, int col) {
+bool Sudoku::advance(int row, int col)
+{
+  if (col == 8) return solveHelper(row+1, 0);
+  else return solveHelper(row, col+1);
+}
+
+
+bool Sudoku::solveHelper(int row, int col) 
+{
   // TODO: IMPLEMENT THIS
+  
+  // base case: solved
+  if (checkBoard()) return true;
+  
+  if (board[row][col] == 0)
+  { 
+    for (int i = 1; i <= 9; i++) {
+      board[row][col] = i;
+      if (isValid(row, col)) {
+        bool status = advance(row, col);
+        if (status) return true;
+      }
+    }
+    board[row][col] = 0;
+    return false;
+  }
+  
+  // value already given
+  return advance(row, col);
 } 
